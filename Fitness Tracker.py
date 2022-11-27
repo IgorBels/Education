@@ -18,7 +18,6 @@ def check_correct_data(data):
         return True
 
 
-
 def check_correct_time(time):
     """Проверка корректности параметра времени."""
     if len(storage_data) > 0 and time <= max(storage_data.keys()):
@@ -35,27 +34,24 @@ def get_step_day(steps):
     step_day = sum_steps + steps
     return step_day
 
-    
-    
 
 def get_distance(steps):
     """Получить дистанцию пройденного пути в км."""
     dist_day = get_step_day(steps) * STEP_M
     return dist_day / 1000
-    
 
 
 def get_spent_calories(dist1, current_time):
     """Получить значения потраченных калорий."""
     hours = current_time.hour + current_time.minute/60
     mean_speed = dist1 / hours
-    spent_calories = (K_1 * WEIGHT + (mean_speed**2 / HEIGHT) * K_2  * WEIGHT) * hours * 60
+    spent_calories = ((K_1 * WEIGHT + (mean_speed**2 / HEIGHT)
+                      * K_2 * WEIGHT) * hours * 60)
     return spent_calories
-   
+
 
 def get_achievement(dist):
     """Получить поздравления за пройденную дистанцию."""
-    
     if dist >= 6.5:
         achievement = 'Отличный результат! Цель достигнута.'
     elif dist >= 3.9:
@@ -64,12 +60,11 @@ def get_achievement(dist):
         achievement = 'Маловато, но завтра наверстаем!'
     else:
         achievement = 'Лежать тоже полезно. Главное — участие, а не победа!'
-   
     return achievement
-    
 
 
-def show_message(current_time, day_steps_count, distance, day_calories, say_achivement):
+def show_message(current_time, day_steps_count, distance, day_calories,
+                 say_achivement):
     output = (f'''
 Время: {current_time}.
 Количество шагов за сегодня: {day_steps_count}.
@@ -79,26 +74,23 @@ def show_message(current_time, day_steps_count, distance, day_calories, say_achi
 ''')
     print(output)
 
+
 def accept_package(data):
     """Обработать пакет данных."""
 
-    if  check_correct_data(data) == False:
+    if check_correct_data(data) is False:
         return 'Некорректный пакет'
-    time, steps = data    
-    pack_time = dt.datetime.strptime(time, FORMAT).time() 
-   
+    time, steps = data
+    pack_time = dt.datetime.strptime(time, FORMAT).time()
 
-    if check_correct_time(pack_time) == False:
+    if check_correct_time(pack_time) is False:
         return 'Некорректное значение времени'
-
     day_steps = get_step_day(steps)
     dist = get_distance(steps)
     spent_calories = get_spent_calories(dist, pack_time)
-    achievement =  get_achievement(dist)
+    achievement = get_achievement(dist)
     show_message(pack_time, day_steps, dist, spent_calories, achievement)
     storage_data[pack_time] = day_steps
-    
-
 
 
 package_0 = ('2:00:01', 505)
